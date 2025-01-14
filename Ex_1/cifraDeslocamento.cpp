@@ -28,4 +28,3 @@ int main(){
     }
     std::cout << ciphertext; //saida do texto cifrado
 }
-}
