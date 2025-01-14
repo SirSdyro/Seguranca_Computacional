@@ -6,6 +6,7 @@
 
 typedef std::string string;
 
+//Funcao que compara duas tuplas, se baseando no segundo elemento delas
 bool compare (const std::tuple<char,int>& first, const std::tuple<char,int>& second){
     if (std::get<1>(first) > std::get<1>(second)){
         return true;
@@ -16,6 +17,7 @@ bool compare (const std::tuple<char,int>& first, const std::tuple<char,int>& sec
     return false;
 }
 
+//Funcao que realiza o deslocamento reverso a partir de uma dada chave
 char Relocate(int letter, int key){
     if (letter >= 'A' && letter <= 'Z') {
         return char((letter - 'A' - key + 26) % 26 + 'A');
@@ -26,6 +28,7 @@ char Relocate(int letter, int key){
     return letter;
 }
 
+//Funcao que padroniza as strings
 string lowerCase(string text){
     string lowerString;
     for(char& c : text){
@@ -34,6 +37,8 @@ string lowerCase(string text){
     return lowerString;
 }
 
+//Funcao que realiza a descriptografia de um texto cifrado por deslocamento, utilizando analise de frequencia.
+//Tentativas são mostradas na tela ate que a correta e encontrada
 void analiseFreq(const string& ciphertext){
     string freq = "aeosirdntcmuplvgbfqhjzxkwy";
     string cipher = lowerCase(ciphertext);
@@ -74,6 +79,8 @@ void analiseFreq(const string& ciphertext){
     }
 }
 
+//Realiza a descriptografia de um texto cifrado por deslocamento na forca bruta.
+//Todas as chaves possiveis sao computadas
 void bruteForce(const string& ciphertext){
     string plaintext;
     for(int i = 0; i < 26; i++){
@@ -104,4 +111,5 @@ int main(){
         std::cout << "não válido" << std::endl;
     }
     return 0;
+}
 }
