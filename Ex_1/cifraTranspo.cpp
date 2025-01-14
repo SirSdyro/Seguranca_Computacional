@@ -5,6 +5,7 @@
 
 typedef std::string string;
 
+//Funcao utilizada para deixar padronizar as strings
 string lowerCase(string text){
     string lowerString;
     for(char& c : text){
@@ -13,6 +14,7 @@ string lowerCase(string text){
     return lowerString;
 }
 
+//Funcao que cria a chave, que e uma lista de numeros que definem como serao ordenadas as colunas
 std::list<int> Chave(const string& x){
     string key = lowerCase(x);
     string chave;
@@ -36,6 +38,7 @@ std::list<int> Chave(const string& x){
     return coluna;
 }
 
+//Funcao que realiza a transposicao do texto plano a partir de uma dada chave
 string cifraTranspo(string chave, string mensagem){
     std::list<int> key = Chave(chave);
     string alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -57,6 +60,7 @@ string cifraTranspo(string chave, string mensagem){
 
 }
 
+//Funcao que realiza a permutacao de uma string, dado um index de onde comecar o processo
 void permuteRec(string ciphertext, int index)
 {
     std::list<string> trigrafos = {"que","ent","nte","ado","ade","ode","ara","est","res","con","com","sta","dos","cao","par","aca","men","sde","ica","ese","aco","ada","por","nto","ose","des","ase","era","oes","uma","tra","ida","dad","ant","are","ont","pre","ist","ter","ais"};
@@ -72,17 +76,18 @@ void permuteRec(string ciphertext, int index)
 
     for (int i = index; i < ciphertext.size(); i++) {
       
-        // Swapping 
+        // Trocando os caracteres
         std::swap(ciphertext[index], ciphertext[i]);
 
-        // First idx+1 characters fixed
+        // Fixando o caractere anterior
         permuteRec(ciphertext, index + 1);
 
-        // Backtrack
+        // Fazendo a troca inversa
         std::swap(ciphertext[index], ciphertext[i]);
     }
 }
 
+//Inicializa a descriptografia
 void decryptTranspo(string ciphertext) {
     permuteRec(ciphertext, 0);
 }
