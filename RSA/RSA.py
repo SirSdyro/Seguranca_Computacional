@@ -1,6 +1,4 @@
-# Large Prime Generation for RSA
 import random
-import sys
 import hashlib
 import base64
  
