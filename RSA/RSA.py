@@ -4,7 +4,7 @@ import sys
 import hashlib
 import base64
  
-# Pre generated primes
+#Lista de numeros primos iniciais
 first_primes_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                      31, 37, 41, 43, 47, 53, 59, 61, 67,
                      71, 73, 79, 83, 89, 97, 101, 103,
@@ -15,52 +15,48 @@ first_primes_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                      263, 269, 271, 277, 281, 283, 293,
                      307, 311, 313, 317, 331, 337, 347, 349]
  
+#Funcao que encontra o mdc de dois numeros
 def mdc(p, q):
     while q != 0:
         p, q = q, p % q
     return p
 
+#Funcao que gera um numero aleatorio de n bits
 def nBitRandom(n):
     return random.getrandbits(n)
  
+#Funcao que testa se um numero e divisivel por uma lista de numeros primos iniciais
 def getLowLevelPrime(n):
-    '''Generate a prime candidate divisible 
-    by first primes'''
     while True:
-        # Obtain a random number
-        pc = nBitRandom(n)
+        n = nBitRandom(n)
  
-        # Test divisibility by pre-generated
-        # primes
         for divisor in first_primes_list:
-            if pc % divisor == 0 and divisor**2 <= pc:
+            if n % divisor == 0 and divisor**2 <= n:
                 break
         else:
-            return pc
+            return n
  
+#Funcao que realiza o teste de primalidade Miller-Rabin
+def isMillerRabinPassed(n):
+    expoente_dois = 0
+    aux = n-1
+    while aux % 2 == 0:
+        aux >>= 1
+        expoente_dois += 1
+    assert(2**expoente_dois * aux == n-1)
  
-def isMillerRabinPassed(mrc):
-    '''Run 20 iterations of Rabin Miller Primality test'''
-    maxDivisionsByTwo = 0
-    ec = mrc-1
-    while ec % 2 == 0:
-        ec >>= 1
-        maxDivisionsByTwo += 1
-    assert(2**maxDivisionsByTwo * ec == mrc-1)
- 
-    def trialComposite(round_tester):
-        if pow(round_tester, ec, mrc) == 1:
+    def trialComposite(numero_teste):
+        if pow(numero_teste, aux, n) == 1:
             return False
-        for i in range(maxDivisionsByTwo):
-            if pow(round_tester, 2**i * ec, mrc) == mrc-1:
+        for i in range(expoente_dois):
+            if pow(numero_teste, 2**i * aux, n) == n-1:
                 return False
         return True
  
-    # Set number of trials here
-    numberOfRabinTrials = 20
-    for i in range(numberOfRabinTrials):
-        round_tester = random.randrange(2, mrc)
-        if trialComposite(round_tester):
+    rodadas = 20
+    for i in range(rodadas):
+        numero_teste = random.randrange(2, n)
+        if trialComposite(numero_teste):
             return False
     return True
 
