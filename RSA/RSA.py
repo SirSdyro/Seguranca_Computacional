@@ -161,9 +161,6 @@ while True:
         print(hash_int, "\n")
         print("-------------------------------------------------------------------")
         print("CIFRACAO RSA COM OAEP","\n")
-        phi = (p-1)*(q-1)
-        print("phi(n) = (p-1)*(q-1):")
-        print(phi, "\n")
         cipher = rsa_encrypt(hash_int, 23, n)
         print("Hash com padding cifrado:")
         print(cipher, "\n")
@@ -181,6 +178,9 @@ while True:
         encoded_hash = int.from_bytes(encoded_hash_bytes)
         print("Assinatura em numero inteiro:")
         print(encoded_hash, "\n")
+        phi = (p-1)*(q-1)
+        print("phi(n) = (p-1)*(q-1):")
+        print(phi, "\n")
         hash = rsa_decrypt(encoded_hash, 23, phi, n)
         print("Assinatura sem padding decifrada:")
         print(hash, "\n")
@@ -190,6 +190,7 @@ while True:
         if hash == hash_teste:
             print("Mensagem decodificada em BASE64:")
             print(base64.b64decode(message2).decode())
+        input()
         break
     else:
         continue
