@@ -2,18 +2,7 @@ import random
 import sys
 import hashlib
 import base64
- 
-#Lista de numeros primos iniciais
-first_primes_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
-                     31, 37, 41, 43, 47, 53, 59, 61, 67,
-                     71, 73, 79, 83, 89, 97, 101, 103,
-                     107, 109, 113, 127, 131, 137, 139,
-                     149, 151, 157, 163, 167, 173, 179,
-                     181, 191, 193, 197, 199, 211, 223,
-                     227, 229, 233, 239, 241, 251, 257,
-                     263, 269, 271, 277, 281, 283, 293,
-                     307, 311, 313, 317, 331, 337, 347, 349]
- 
+
 #Funcao que encontra o mdc de dois numeros
 def mdc(p, q):
     while q != 0:
@@ -23,17 +12,6 @@ def mdc(p, q):
 #Funcao que gera um numero aleatorio de n bits
 def nBitRandom(n):
     return random.getrandbits(n)
- 
-#Funcao que testa se um numero e divisivel por uma lista de numeros primos iniciais
-def getLowLevelPrime(n):
-    while True:
-        n = nBitRandom(n)
- 
-        for divisor in first_primes_list:
-            if n % divisor == 0 and divisor**2 <= n:
-                break
-        else:
-            return n
  
 #Funcao que realiza o teste de primalidade Miller-Rabin
 def isMillerRabinPassed(n):
@@ -129,68 +107,80 @@ def rsa_decrypt(cipher, e, phi, n):
     plaintext = OAEP_unpad(padded_plaintext.to_bytes(256))
     return int.from_bytes(plaintext)
 
-random.seed(3041735568637125599) #Semente para reprodutibilidade do resultado
+random.seed(3041735568637125599) #Semente que gera um resultado positivo garantido
 while True:
     n = 1024
-    #p = getLowLevelPrime(n)
+    #p = nBitRandom(n)
+    #print(p, "\n")
     p = 142540984084842373528554216101328477512272737825818698707193218342253704337743113222120862588334006659016214636470679525454328398350902118574574279272175942622860010891899344762580914002429512531804592383470319857040194550806309372990137960475620696728015784367986815264669262155544976950446379847608840328683
-    #q = getLowLevelPrime(n)
-    q = 134752603881357130257014875736430163121202348030624673249908034547345341113325144628769101811033291842265197240947782054734048588039759699511244221312827419395596182234386251220889669882451203118878633826930494948130757978548132978633484056553220292888880325490420759361144641801231821860476072244435805462513
-    if isMillerRabinPassed(p) and isMillerRabinPassed(q):
-        #seed = random.randrange(sys.maxsize)
-        #rng = random.Random(seed)
-        #print("Seed was:", seed)
-        print("-------------------------------------------------------------------")
-        print("GERACAO DAS CHAVES, PREPARACAO DA MENSAGEM E DO HASH","\n")
-        print("p =",p,"\n")
-        print("q =",q,"\n")
-        n = p*q
-        print("p*q =",n,"\n")
-        f = open("entrada.txt", "r")
-        test = f.read()
-        print("Mensagem:")
-        print(test, "\n")
-        message = base64.b64encode(test.encode())
-        print("Mensagem codificada em BASE64:")
-        print(message, "\n")
-        hash = hashlib.sha3_256(message).digest()
-        print("Hash da mensagem em bytes:")
-        print(hash, "\n")
-        hash_int = int.from_bytes(hash)
-        print("Hash da mensagem em numero inteiro:")
-        print(hash_int, "\n")
-        print("-------------------------------------------------------------------")
-        print("CIFRACAO RSA COM OAEP","\n")
-        cipher = rsa_encrypt(hash_int, 23, n)
-        print("Hash com padding cifrado:")
-        print(cipher, "\n")
-        aux = message + cipher.to_bytes(256)
-        print("Mensagem concatenada com a assinatura:")
-        print(aux, "\n")
-        print("-------------------------------------------------------------------")
-        print("DECIFRACAO RSA COM OAEP","\n")
-        message2 = aux[:len(aux) - 256]
-        print("Mensagem separada da assinatura:")
-        print(message2, "\n")
-        encoded_hash_bytes = aux[len(aux) - 256:]
-        print("Assinatura separada da messagem:")
-        print(encoded_hash_bytes, "\n")
-        encoded_hash = int.from_bytes(encoded_hash_bytes)
-        print("Assinatura em numero inteiro:")
-        print(encoded_hash, "\n")
-        phi = (p-1)*(q-1)
-        print("phi(n) = (p-1)*(q-1):")
-        print(phi, "\n")
-        hash = rsa_decrypt(encoded_hash, 23, phi, n)
-        print("Assinatura sem padding decifrada:")
-        print(hash, "\n")
-        hash_teste = int.from_bytes(hashlib.sha3_256(message2).digest())
-        print("Hash da mensagem:")
-        print(hash_teste, "\n")
-        if hash == hash_teste:
-            print("Mensagem decodificada em BASE64:")
-            print(base64.b64decode(message2).decode())
-        input()
+    if isMillerRabinPassed(p):
+        while True:
+            #q = nBitRandom(n)
+            #print(q, "\n")
+            q = 134752603881357130257014875736430163121202348030624673249908034547345341113325144628769101811033291842265197240947782054734048588039759699511244221312827419395596182234386251220889669882451203118878633826930494948130757978548132978633484056553220292888880325490420759361144641801231821860476072244435805462513
+            if isMillerRabinPassed(q):
+                #seed = random.randrange(sys.maxsize)
+                #rng = random.Random(seed)
+                #print("Seed was:", seed)
+                print("-------------------------------------------------------------------")
+                print("GERACAO DAS CHAVES, PREPARACAO DA MENSAGEM E DO HASH","\n")
+                print("p =",p,"\n")
+                print(p.bit_length())
+                print("q =",q,"\n")
+                print(q.bit_length())
+                n = p*q
+                print("p*q =",n,"\n")
+                phi = (p-1)*(q-1)
+                print("phi(n) = (p-1)*(q-1):")
+                print(phi, "\n")
+                #e = 2
+                #while mdc(phi,e) != 1:                 #Descomente para gerar um e aleatorio
+                #    e = random.randrange(2,phi)
+                e = 23                                  #Comente para gerar um e aleatorio
+                print("Expoente e publico:",e,"\n")
+                f = open("entrada.txt", "r")
+                test = f.read()
+                print("Mensagem:")
+                print(test, "\n")
+                message = base64.b64encode(test.encode())
+                print("Mensagem codificada em BASE64:")
+                print(message, "\n")
+                hash = hashlib.sha3_256(message).digest()
+                print("Hash da mensagem em bytes:")
+                print(hash, "\n")
+                hash_int = int.from_bytes(hash)
+                print("Hash da mensagem em numero inteiro:")
+                print(hash_int, "\n")
+                print("-------------------------------------------------------------------")
+                print("CIFRACAO RSA COM OAEP","\n")
+                cipher = rsa_encrypt(hash_int, e, n)
+                print("Hash com padding cifrado:")
+                print(cipher, "\n")
+                aux = message + cipher.to_bytes(256)
+                print("Mensagem concatenada com a assinatura:")
+                print(aux, "\n")
+                print("-------------------------------------------------------------------")
+                print("DECIFRACAO RSA COM OAEP","\n")
+                message2 = aux[:len(aux) - 256]
+                print("Mensagem separada da assinatura:")
+                print(message2, "\n")
+                encoded_hash_bytes = aux[len(aux) - 256:]
+                print("Assinatura separada da messagem:")
+                print(encoded_hash_bytes, "\n")
+                encoded_hash = int.from_bytes(encoded_hash_bytes)
+                print("Assinatura em numero inteiro:")
+                print(encoded_hash, "\n")
+                hash = rsa_decrypt(encoded_hash, e, phi, n)
+                print("Assinatura sem padding decifrada:")
+                print(hash, "\n")
+                hash_teste = int.from_bytes(hashlib.sha3_256(message2).digest())
+                print("Hash da mensagem:")
+                print(hash_teste, "\n")
+                if hash == hash_teste:
+                    print("Mensagem decodificada em BASE64:")
+                    print(base64.b64decode(message2).decode())
+                input()
+                break
         break
     else:
         continue
