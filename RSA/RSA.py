@@ -125,9 +125,7 @@ while True:
                 print("-------------------------------------------------------------------")
                 print("GERACAO DAS CHAVES, PREPARACAO DA MENSAGEM E DO HASH","\n")
                 print("p =",p,"\n")
-                print(p.bit_length())
                 print("q =",q,"\n")
-                print(q.bit_length())
                 n = p*q
                 print("p*q =",n,"\n")
                 phi = (p-1)*(q-1)
